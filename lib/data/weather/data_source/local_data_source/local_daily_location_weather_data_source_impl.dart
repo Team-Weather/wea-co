@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:weaco/core/enum/exception_code.dart';
 import 'package:weaco/core/hive/hive_wrapper.dart';
 import 'package:weaco/data/weather/data_source/local_data_source/local_daily_location_weather_data_source.dart';
 import 'package:weaco/domain/weather/model/daily_location_weather.dart';
@@ -26,9 +27,13 @@ class LocalDailyLocationWeatherDataSourceImpl
 
   /// 로컬의 DailyLocationWeather 데이터를 가져와서 반환한다.
   @override
-  Future<DailyLocationWeather?> getLocalDailyLocationWeather() async {
-    final data = await _hiveWrapper.readData(dailyLocationWeatherKey);
-    if (data == null) return null;
-    return DailyLocationWeather.fromJson(jsonDecode(data));
+  Future<DailyLocationWeather> getLocalDailyLocationWeather() async {
+    try {
+      final data = await _hiveWrapper.readData(dailyLocationWeatherKey);
+
+      return DailyLocationWeather.fromJson(jsonDecode(data!));
+    } catch (e) {
+      throw ExceptionCode.notFoundException;
+    }
   }
 }

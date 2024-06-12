@@ -38,42 +38,6 @@ void main() {
 
         expect(mockUserAuthRepositoryImpl.methodParameter, expectParameter);
       });
-      test('일치하는 유저가 없을시 false를 반환한다.', () async {
-        final expectParameter = UserAuth(
-          email: 'qoophon@gmail.com',
-          password: 'password',
-        );
-
-        mockUserAuthRepositoryImpl.addUserAuth(
-          UserAuth(
-            email: 'qoophon@gmail.com',
-            password: 'password1',
-          ),
-        );
-
-        final actualReturnValue =
-            await signInUseCase.execute(userAuth: expectParameter);
-
-        expect(actualReturnValue, false);
-      });
-      test('일치하는 유저가 있을 시 true를 반환한다.', () async {
-        final expectParameter = UserAuth(
-          email: 'qoophon@gmail.com',
-          password: 'password',
-        );
-
-        mockUserAuthRepositoryImpl.addUserAuth(
-          UserAuth(
-            email: 'qoophon@gmail.com',
-            password: 'password',
-          ),
-        );
-
-        final actualReturnValue =
-            await signInUseCase.execute(userAuth: expectParameter);
-
-        expect(actualReturnValue, true);
-      });
     });
   });
 }

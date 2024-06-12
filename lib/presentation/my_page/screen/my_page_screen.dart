@@ -201,19 +201,11 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                 myPageViewModel
                                     .removeSelectedFeed(currentFeed.id!)
                                     .then((result) {
-                                  if (result) {
-                                    AlertUtil.showAlert(
-                                      context: context,
-                                      exceptionAlert: ExceptionAlert.snackBar,
-                                      message: '피드가 삭제 되었습니다.',
-                                    );
-                                  } else {
-                                    AlertUtil.showAlert(
-                                      context: context,
-                                      exceptionAlert: ExceptionAlert.snackBar,
-                                      message: '피드가 삭제에 실패했습니다.',
-                                    );
-                                  }
+                                  AlertUtil.showAlert(
+                                    context: context,
+                                    exceptionAlert: ExceptionAlert.snackBar,
+                                    message: '피드가 삭제 되었습니다.',
+                                  );
 
                                   context.pop();
                                   context.pop();

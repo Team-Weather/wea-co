@@ -8,7 +8,7 @@ class SignOutUseCase {
   }) : _userAuthRepository = userAuthRepository;
 
   /// 설정 화면의 회월 탈퇴를 위한 Use Case
-  Future<bool> execute() async {
-    return await _userAuthRepository.signOut();
+  Future<void> execute() async {
+    await _userAuthRepository.signOut();
   }
 }

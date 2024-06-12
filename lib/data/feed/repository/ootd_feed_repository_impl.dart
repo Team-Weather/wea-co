@@ -26,16 +26,16 @@ class OotdFeedRepositoryImpl implements OotdFeedRepository {
 
   /// 피드 저장 및 수정
   @override
-  Future<bool> saveOotdFeed({required Feed feed}) async {
-    return _firestoreService.run((Transaction transaction) async {
-      return feed.id == null
+  Future<void> saveOotdFeed({required Feed feed}) async {
+    await _firestoreService.run((Transaction transaction) async {
+      feed.id == null
           ? await _save(transaction: transaction, feed: feed)
           : await _update(transaction: transaction, feed: feed);
     });
   }
 
   /// 피드 저장
-  Future<bool> _save({
+  Future<void> _save({
     required Transaction transaction,
     required Feed feed,
   }) async {
@@ -50,27 +50,23 @@ class OotdFeedRepositoryImpl implements OotdFeedRepository {
       transaction: transaction,
       count: 1,
     );
-
-    return true;
   }
 
   /// 피드 수정
-  Future<bool> _update({
+  Future<void> _update({
     required Transaction transaction,
     required Feed feed,
   }) async {
-    final updateResult = await _remoteFeedDataSource.saveFeed(
+    await _remoteFeedDataSource.saveFeed(
       transaction: transaction,
       feed: feed,
     );
-
-    return updateResult;
   }
 
   /// 피드 삭제
   @override
-  Future<bool> removeOotdFeed({required String id}) async {
-    return _firestoreService.run((Transaction transaction) async {
+  Future<void> removeOotdFeed({required String id}) async {
+    await _firestoreService.run((Transaction transaction) async {
       await _remoteFeedDataSource.deleteFeed(
         transaction: transaction,
         id: id,
@@ -80,8 +76,6 @@ class OotdFeedRepositoryImpl implements OotdFeedRepository {
         transaction: transaction,
         count: -1,
       );
-
-      return true;
     });
   }
 

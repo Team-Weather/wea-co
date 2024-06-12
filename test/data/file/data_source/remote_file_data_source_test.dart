@@ -45,14 +45,12 @@ void main() {
         File? croppedImage = await localFileDataSource.getImage(imageType: ImageType.cropped);
         File? compressedImage = await localFileDataSource.getImage(imageType: ImageType.compressed);
 
-        if (croppedImage != null && compressedImage != null) {
-          final path =
-              await remoteFileDataSource.saveImage(croppedImage: croppedImage, compressedImage: compressedImage);
+        final path =
+            await remoteFileDataSource.saveImage(croppedImage: croppedImage, compressedImage: compressedImage);
 
-          expect(path[0].startsWith('${bucketPath}feed_origin_images/$email'), true);
-          expect(path[1].startsWith('${bucketPath}feed_thumbnail_images/$email'), true);
-        }
-      });
+        expect(path[0].startsWith('${bucketPath}feed_origin_images/$email'), true);
+        expect(path[1].startsWith('${bucketPath}feed_thumbnail_images/$email'), true);
+            });
     });
   });
 }

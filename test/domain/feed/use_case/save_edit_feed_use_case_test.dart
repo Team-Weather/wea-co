@@ -47,41 +47,6 @@ void main() {
         // Then
         expect(ootdFeedRepository.saveOotdFeedCallCount, expectedCallCount);
       });
-
-      test('OotdFeedRepository.saveFeed를 호출하고 반환받은 값을 그대로 반환한다.', () async {
-        // Given
-        const bool expected = true;
-        final editedFeed = Feed(
-          id: 'id',
-          imagePath: 'imagePath',
-          thumbnailImagePath: 'thumbnailImagePath',
-          userEmail: 'userEmail',
-          description: 'description',
-          weather: Weather(
-            temperature: 1,
-            timeTemperature: DateTime.now(),
-            code: 1,
-            createdAt: DateTime.now(),
-          ),
-          seasonCode: 1,
-          location: Location(
-            lat: 1,
-            lng: 1,
-            city: 'city',
-            createdAt: DateTime.now(),
-          ),
-          createdAt: DateTime.now(),
-          deletedAt: null,
-        );
-        ootdFeedRepository.saveOotdFeedParamFeed = editedFeed;
-        ootdFeedRepository.saveOotdFeedReturnValue = expected;
-
-        // When
-        final actual = await saveEditFeedUseCase.execute(feed: editedFeed);
-
-        // Then
-        expect(actual, expected);
-      });
     });
   });
 }

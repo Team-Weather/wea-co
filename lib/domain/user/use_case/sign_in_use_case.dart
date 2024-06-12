@@ -9,7 +9,7 @@ class SignInUseCase {
   }) : _userAuthRepository = userAuthRepository;
 
   /// 로그인
-  Future<bool> execute({required UserAuth userAuth}) async {
-    return await _userAuthRepository.signIn(userAuth: userAuth);
+  Future<void> execute({required UserAuth userAuth}) async {
+    await _userAuthRepository.signIn(userAuth: userAuth);
   }
 }

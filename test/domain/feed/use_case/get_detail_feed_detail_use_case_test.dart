@@ -20,6 +20,28 @@ void main() {
       test('파라미터로 받은 id를 FeedRepository.getFeed에 넘긴다.', () async {
         // Given
         const String expectedId = 'id';
+        feedRepository.getFeedResult = Feed(
+          id: 'id',
+          imagePath: 'imagePath',
+          thumbnailImagePath: 'thumbnailImagePath',
+          userEmail: 'userEmail',
+          description: 'description',
+          weather: Weather(
+            temperature: 1,
+            timeTemperature: DateTime.now(),
+            code: 1,
+            createdAt: DateTime.now(),
+          ),
+          seasonCode: 1,
+          location: Location(
+            lat: 1,
+            lng: 1,
+            city: 'city',
+            createdAt: DateTime.now(),
+          ),
+          createdAt: DateTime.now(),
+          deletedAt: null,
+        );
 
         // When
         await getDetailFeedDetailUseCase.execute(id: expectedId);

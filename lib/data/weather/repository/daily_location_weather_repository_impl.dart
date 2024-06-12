@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:weaco/core/exception/not_found_exception.dart';
 import 'package:weaco/data/weather/data_source/remote_data_source/remote_weather_data_source.dart';
 import 'package:weaco/data/weather/dto/weather_dto.dart';
 import 'package:weaco/data/weather/mapper/daily_location_weather_mapper.dart';
@@ -32,6 +33,10 @@ class DailyLocationWeatherRepositoryImpl
     final DailyLocationWeather? localData =
         await _localDailyLocationWeatherDataSource
             .getLocalDailyLocationWeather();
+
+    if (localData is NotFoundException) {
+      await _fetchAndCacheDailyLocationWeather();
+    }
 
     return _isOldDataOrExpired(localData)
         ? await _fetchAndCacheDailyLocationWeather()

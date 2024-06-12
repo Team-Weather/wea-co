@@ -37,20 +37,6 @@ void main() {
         // Then
         expect(mockFileRepository.methodParameterMap['data'], data);
       });
-
-      test('FileRepository.saveImage()을 호출하고 반환 받은 값을 그대로 반환한다.', () async {
-        // Given
-        File data = File('flutter-wea-co\\test\\mock\\assets\\test_file.txt');
-        bool expectResult = false;
-        mockFileRepository.saveImageResult = expectResult;
-
-        // When
-        final result =
-            await mockFileRepository.saveImage(isOrigin: true, file: data);
-
-        // Then
-        expect(result, expectResult);
-      });
     });
   });
 }

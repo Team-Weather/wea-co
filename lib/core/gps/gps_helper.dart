@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:geolocator/geolocator.dart';
+import 'package:weaco/core/enum/exception_code.dart';
 import 'package:weaco/core/gps/gps_permission_status.dart';
 import 'package:weaco/core/gps/gps_position.dart';
 
@@ -43,7 +44,6 @@ class GpsHelper {
       Position position = await Geolocator.getCurrentPosition();
       return GpsPosition(lat: position.latitude, lng: position.longitude);
     }
-    // Todo: 커스텀 Exception으로 리팩토링 필요
-    throw Exception('권한 없음');
+    throw ExceptionCode.locationException;
   }
 }

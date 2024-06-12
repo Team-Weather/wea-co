@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:weaco/core/enum/exception_code.dart';
 import 'package:weaco/core/enum/image_type.dart';
 import 'package:weaco/core/path_provider/path_provider_service.dart';
 import 'package:weaco/data/file/data_source/local/local_file_data_source.dart';
@@ -14,8 +15,8 @@ void main() {
     final LocalFileDataSource dataSource =
         LocalFileDataSourceImpl(pathProvider: mockPathProvider);
 
-    group('getImagePath 메서드는', () {
-      tearDown(() {
+    group('getImage 메서드는', () {
+      setUp(() {
         if (File('test/mock/assets/origin.png').existsSync()) {
           File('test/mock/assets/origin.png').deleteSync();
         }
@@ -35,7 +36,7 @@ void main() {
         File? file = await dataSource.getImage(imageType: imageType);
 
         // Then
-        expect(file?.readAsBytesSync(),
+        expect(file.readAsBytesSync(),
             File('test/mock/assets/origin.png').readAsBytesSync());
       });
 
@@ -49,19 +50,16 @@ void main() {
         File? file = await dataSource.getImage(imageType: imageType);
 
         // Then
-        expect(file?.readAsBytesSync(),
+        expect(file.readAsBytesSync(),
             File('test/mock/assets/cropped.png').readAsBytesSync());
       });
 
-      test('찾으려는 파일이 없는 경우, null을 반환한다.', () async {
+      test('찾으려는 파일이 없는 경우, ExceptionCode.notFoundException 예외를 던진다.', () async {
         // Given
         const imageType = ImageType.cropped;
 
-        // When
-        File? file = await dataSource.getImage(imageType: imageType);
-
-        // Then
-        expect(file, null);
+        // When, Then
+        expect(dataSource.getImage(imageType: imageType), throwsA(ExceptionCode.notFoundException));
       });
     });
 

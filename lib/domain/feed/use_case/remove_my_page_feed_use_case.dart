@@ -9,7 +9,7 @@ class RemoveMyPageFeedUseCase {
   /// id를 통해 특정 피드를 삭제
   /// @param id: 삭제할 피드의 id
   /// @return: null
-  Future<bool> execute({required String id}) async {
-    return await _ootdFeedRepository.removeOotdFeed(id: id);
+  Future<void> execute({required String id}) async {
+    await _ootdFeedRepository.removeOotdFeed(id: id);
   }
 }

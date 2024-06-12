@@ -7,7 +7,7 @@ class LogOutUseCase {
     required UserAuthRepository userAuthRepository,
   }) : _userAuthRepository = userAuthRepository;
 
-  Future<bool> execute() async {
-    return await _userAuthRepository.logOut();
+  Future<void> execute() async {
+    await _userAuthRepository.logOut();
   }
 }

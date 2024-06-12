@@ -228,15 +228,7 @@ class _OotdPostScreenState extends State<OotdPostScreen> {
                   }
 
                   if (mounted) {
-                    if (viewModel.saveStatus) {
-                      RouterStatic.goToDefault(context);
-                    } else {
-                      AlertUtil.showAlert(
-                        context: context,
-                        exceptionAlert: ExceptionAlert.snackBar,
-                        message: '다시 시도해 주세요.',
-                      );
-                    }
+                    RouterStatic.goToDefault(context);
                   }
                 },
           child: viewModel.showSpinner

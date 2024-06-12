@@ -2,8 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weaco/core/config/meteo_config.dart';
 import 'package:weaco/core/dio/base_response.dart';
-import 'package:weaco/core/exception/internal_server_exception.dart';
-import 'package:weaco/core/exception/not_found_exception.dart';
+import 'package:weaco/core/enum/exception_code.dart';
 import 'package:weaco/data/weather/data_source/remote_data_source/meteo_weather_api.dart';
 import 'package:weaco/data/weather/dto/daily_dto.dart';
 import 'package:weaco/data/weather/dto/hourly_dto.dart';
@@ -39,14 +38,14 @@ Future<void> main() async {
         expect(mockMeteoDio.getPathParameter, expectedUrl);
       });
 
-      test('반환받은 status code가 404라면 NotFoundException예외를 던진다.', () async {
+      test('반환받은 status code가 200이 아니라면 ExceptionCode예외를 던진다.', () async {
         // Given
         mockMeteoDio.getResponseReturnData =
             BaseResponse(statusCode: 404, body: {});
 
         // When Then
         expect(meteoWeatherApi.getWeather(lat: lat, lng: lng),
-            throwsA(isA<NotFoundException>()));
+            throwsA(ExceptionCode.internalServerException));
       });
 
       test('반환받은 status code가 500이라면 InternalServerException예외를 던진다.',
@@ -57,7 +56,7 @@ Future<void> main() async {
 
         // When Then
         expect(meteoWeatherApi.getWeather(lat: lat, lng: lng),
-            throwsA(isA<InternalServerException>()));
+            throwsA(ExceptionCode.internalServerException));
       });
 
       test('반환받은 status code가 200이라면 BaseResponse를 반환한다.', () async {

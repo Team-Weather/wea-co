@@ -33,11 +33,17 @@ void main() async {
         );
 
         // When
-        final bool res =
-            await dataSource.saveUserProfile(userProfile: expectedUserProfile);
+        await dataSource.saveUserProfile(userProfile: expectedUserProfile);
+
+        final actual = await instance
+            .collection('user_profiles')
+            .where('email', isEqualTo: 'test@gmail.com')
+            .get();
+
+        final data = actual.docs.first.data()['email'];
 
         // Then
-        expect(res, true);
+        expect(data, expectedUserProfile.email);
       });
       test(
           'getUserProfile()은 firebase storage에서 파라미터로 받은 이메일과 동일한 유저 프로필 정보를 반환한다.',
@@ -106,52 +112,15 @@ void main() async {
           expect(result, expectProfile);
         },
       );
-
-      test(
-        'updateUserProfile()은 userProfile 이 null 일 경우, 현재 유저 프로필 정보를 업데이트한다.',
-        () async {
-          // Given
-          await instance.collection('user_profiles').add({
-            'created_at': '2024-05-01 13:27:00',
-            'deleted_at': null,
-            'email': 'test@gmail.com',
-            'feed_count': 0,
-            'gender': 1,
-            'nickname': '호구몬',
-            'profile_image_path':
-                'https://health.chosun.com/site/data/img_dir/2024/01/22/2024012201607_0.jpg'
-          });
-
-          final editedUserProfile = UserProfile(
-            email: 'test@gmail.com',
-            nickname: '테스트123',
-            gender: 1,
-            profileImagePath:
-                'https://health.chosun.com/site/data/img_dir/2024/01/22/2024012201607_0.jpg',
-            feedCount: 0,
-            createdAt: DateTime.parse('2024-05-01 13:27:00'),
-          );
-
-          // When
-          final res = await instance.runTransaction((transaction) async {
-            return await dataSource.updateUserProfile(
-              transaction: transaction,
-              userProfile: editedUserProfile,
-            );
-          });
-
-          // Then
-          expect(res, true);
-        },
-      );
       test(
         'removeUserProfile()은 firebase storage에서 파라미터로 받은 이메일과 동일한 유저 프로필 정보를 삭제한다.',
         () async {
           // Given
+          const email = 'test@gmail.com';
           await instance.collection('user_profiles').add({
             'created_at': '2024-05-01 13:27:00',
             'deleted_at': null,
-            'email': 'test@gmail.com',
+            'email': email,
             'feed_count': 0,
             'gender': 1,
             'nickname': '호구몬',
@@ -160,10 +129,16 @@ void main() async {
           });
 
           // When
-          final bool res = await dataSource.removeUserProfile();
+          await dataSource.removeUserProfile(email: email);
+          final actual = await instance
+              .collection('user_profiles')
+              .where('email', isEqualTo: 'test@gmail.com')
+              .get();
+
+          final data = actual.docs.first.data()['deleted_at'];
 
           // Then
-          expect(res, true);
+          expect(data != null, true);
         },
       );
 
@@ -183,10 +158,16 @@ void main() async {
           });
 
           // When
-          final bool res = await dataSource.removeUserProfile();
+          await dataSource.removeUserProfile();
+          final actual = await instance
+              .collection('user_profiles')
+              .where('email', isEqualTo: firebaseService.user?.email)
+              .get();
+
+          final data = actual.docs.first.data()['deleted_at'];
 
           // Then
-          expect(res, true);
+          expect(data != null, true);
         },
       );
     },

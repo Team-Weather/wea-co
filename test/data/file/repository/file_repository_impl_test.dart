@@ -129,14 +129,6 @@ void main() {
         expect(mockLocalFileDataSource.methodCallCount['getImage'], 2);
       });
 
-      test('LocalFileDataSource.getImage()의 반환 값이 null이라면 Exception을 발생시킨다.', () async {
-        // Given
-        mockLocalFileDataSource.methodResult['getImage'] = null;
-
-        // When // Then
-        expect(fileRepository.saveOotdImage(),throwsA(isA<Exception>()));
-      });
-
       test('RemoteFileDataSource.saveImage()의 반환 값을 그대로 반환한다.', () async {
         // Given
         const List<String> expectResult = ['test/mock/assets/test_image.png', 'test/mock/assets/test_image.png'];

@@ -16,7 +16,6 @@ class OotdPostViewModel with ChangeNotifier {
   final GetDailyLocationWeatherUseCase _getDailyLocationWeatherUseCase;
   final SaveEditFeedUseCase _saveEditFeedUseCase;
   bool _showSpinner = false;
-  bool _saveStatus = false;
   File? _originImage;
   File? _croppedImage;
   Weather? _weather;
@@ -38,7 +37,8 @@ class OotdPostViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      _croppedImage = await _getImageUseCase.execute(imageType: ImageType.cropped);
+      _croppedImage =
+          await _getImageUseCase.execute(imageType: ImageType.cropped);
       _dailyLocationWeather = await _getDailyLocationWeatherUseCase.execute();
       // 현재 시간 날씨
       _weather = _dailyLocationWeather!.weatherList.firstWhere((element) {
@@ -79,7 +79,7 @@ class OotdPostViewModel with ChangeNotifier {
       createdAt: now,
     );
 
-    _saveStatus = await _saveEditFeedUseCase.execute(feed: feed);
+    await _saveEditFeedUseCase.execute(feed: feed);
 
     _showSpinner = false;
     notifyListeners();
@@ -101,7 +101,7 @@ class OotdPostViewModel with ChangeNotifier {
       createdAt: feed.createdAt,
     );
 
-    _saveStatus = await _saveEditFeedUseCase.execute(feed: editedFeed);
+    await _saveEditFeedUseCase.execute(feed: editedFeed);
 
     _showSpinner = false;
     notifyListeners();
@@ -119,8 +119,6 @@ class OotdPostViewModel with ChangeNotifier {
   Weather? get weather => _weather;
 
   DailyLocationWeather? get dailyLocationWeather => _dailyLocationWeather;
-
-  bool get saveStatus => _saveStatus;
 
   bool get showSpinner => _showSpinner;
 }

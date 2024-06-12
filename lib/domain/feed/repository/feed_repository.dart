@@ -11,7 +11,7 @@ abstract interface class FeedRepository {
   });
 
   /// 피드의 상세 정보를 가져옵니다.
-  Future<Feed?> getFeed({required String id});
+  Future<Feed> getFeed({required String id});
 
   /// [홈 하단]
   /// 추천 OOTD 목록을 불러옵니다.

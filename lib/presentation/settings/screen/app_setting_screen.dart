@@ -113,21 +113,14 @@ class _AppSettingScreenState extends State<AppSettingScreen> {
     context.pop();
 
     context.read<AppSettingViewModel>().logOut().then((value) {
-      if (value) {
-        context.read<UserProvider>().signOut();
+      context.read<UserProvider>().signOut();
 
-        AlertUtil.showAlert(
-            context: context,
-            exceptionAlert: ExceptionAlert.snackBar,
-            message: '로그아웃에 성공했습니다.');
+      AlertUtil.showAlert(
+          context: context,
+          exceptionAlert: ExceptionAlert.snackBar,
+          message: '로그아웃에 성공했습니다.');
 
-        RouterStatic.clearAndNavigate(context, RouterPath.defaultPage.path);
-      } else {
-        AlertUtil.showAlert(
-            context: context,
-            exceptionAlert: ExceptionAlert.snackBar,
-            message: '로그아웃에 실패했습니다.');
-      }
+      RouterStatic.clearAndNavigate(context, RouterPath.defaultPage.path);
     });
   }
 
@@ -135,21 +128,14 @@ class _AppSettingScreenState extends State<AppSettingScreen> {
     context.pop();
 
     context.read<AppSettingViewModel>().signOut().then((value) {
-      if (value) {
-        context.read<UserProvider>().signOut();
+      context.read<UserProvider>().signOut();
 
-        AlertUtil.showAlert(
-            context: context,
-            exceptionAlert: ExceptionAlert.snackBar,
-            message: '회원탈퇴에 성공했습니다.');
+      AlertUtil.showAlert(
+          context: context,
+          exceptionAlert: ExceptionAlert.snackBar,
+          message: '회원탈퇴에 성공했습니다.');
 
-        RouterStatic.clearAndNavigate(context, RouterPath.defaultPage.path);
-      } else {
-        AlertUtil.showAlert(
-            context: context,
-            exceptionAlert: ExceptionAlert.snackBar,
-            message: '회원탈퇴에 실패했습니다.');
-      }
+      RouterStatic.clearAndNavigate(context, RouterPath.defaultPage.path);
     });
   }
 }

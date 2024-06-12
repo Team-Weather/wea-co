@@ -53,26 +53,6 @@ void main() {
       });
 
       test(
-          'UserAuthDataSource.signUp() 이 실패하면'
-          'RemoteUserProfileDataSource.saveUserProfile() 메소드를'
-          '호출하지 않는다.', () async {
-        // given
-        int expectCallCount = 0;
-
-        userAuthDataSource.returnValue = false;
-
-        // when
-        await userAuthRepository.signUp(
-          userAuth: userAuth,
-          userProfile: userProfile,
-        );
-
-        // then
-        expect(userProfileDataSource.saveUserProfileMethodCallCount,
-            expectCallCount);
-      });
-
-      test(
           'UserAuthDataSource.signUp() 이 성공하면'
           'RemoteUserProfileDataSource.saveUserProfile() 메소드를'
           '1회 호출한다.', () async {
@@ -121,171 +101,63 @@ void main() {
             expectUserProfile);
       });
 
-      test('회원가입이 성공했을 때 true 를 반환한다.', () async {
-        // given
-        final expectUserAuth = userAuth.copyWith();
-        final expectUserProfile = userProfile.copyWith();
+      group('signIn() 메소드는', () {
+        test('UserAuthDataSource.signIn() 메소드를 1회 호출한다.', () async {
+          // given
+          int expectCallCount = 1;
 
-        userAuthDataSource.returnValue = true;
-        userProfileDataSource.isSaved = true;
+          // when
+          await userAuthRepository.signIn(
+            userAuth: userAuth,
+          );
 
-        // when
-        final actualResult = await userAuthRepository.signUp(
-          userAuth: expectUserAuth,
-          userProfile: expectUserProfile,
-        );
+          // then
+          expect(userAuthDataSource.signInCallCount, expectCallCount);
+        });
 
-        // then
-        expect(actualResult, true);
-      });
-      test('회원가입이 성공했을 때 false 를 반환한다.', () async {
-        // given
-        final expectUserAuth = userAuth.copyWith();
-        final expectUserProfile = userProfile.copyWith();
+        test('인자로 받은 값을 UserAuthDataSource.signIn() 메소드에 그대로 전달한다.', () async {
+          // given
+          final expectUserAuth = userAuth.copyWith();
 
-        userAuthDataSource.returnValue = false;
+          final expectUserAuthParameter = {
+            'email': expectUserAuth.email,
+            'password': expectUserAuth.password,
+          };
 
-        // when
-        final actualResult = await userAuthRepository.signUp(
-          userAuth: expectUserAuth,
-          userProfile: expectUserProfile,
-        );
+          // when
+          await userAuthRepository.signIn(
+            userAuth: expectUserAuth,
+          );
 
-        // then
-        expect(actualResult, false);
-      });
-    });
-
-    group('signIn() 메소드는', () {
-      test('UserAuthDataSource.signIn() 메소드를 1회 호출한다.', () async {
-        // given
-        int expectCallCount = 1;
-
-        // when
-        await userAuthRepository.signIn(
-          userAuth: userAuth,
-        );
-
-        // then
-        expect(userAuthDataSource.signInCallCount, expectCallCount);
+          // then
+          expect(userAuthDataSource.methodParameter, expectUserAuthParameter);
+        });
       });
 
-      test('인자로 받은 값을 UserAuthDataSource.signIn() 메소드에 그대로 전달한다.', () async {
-        // given
-        final expectUserAuth = userAuth.copyWith();
+      group('logOut() 메소드는', () {
+        test('UserAuthDataSource.logOut() 메소드를 1회 호출한다.', () async {
+          // given
+          int expectCallCount = 1;
 
-        final expectUserAuthParameter = {
-          'email': expectUserAuth.email,
-          'password': expectUserAuth.password,
-        };
+          // when
+          await userAuthRepository.logOut();
 
-        // when
-        await userAuthRepository.signIn(
-          userAuth: expectUserAuth,
-        );
-
-        // then
-        expect(userAuthDataSource.methodParameter, expectUserAuthParameter);
+          // then
+          expect(userAuthDataSource.logOutCallCount, expectCallCount);
+        });
       });
 
-      test('로그인이 성공했을 때 true 를 반환한다.', () async {
-        // given
-        final expectUserAuth = userAuth.copyWith();
+      group('signOut() 메소드는', () {
+        test('UserAuthDataSource.signOut() 메소드를 1회 호출한다.', () async {
+          // given
+          int expectCallCount = 1;
 
-        userAuthDataSource.returnValue = true;
+          // when
+          await userAuthRepository.signOut();
 
-        // when
-        final actualResult = await userAuthRepository.signIn(
-          userAuth: expectUserAuth,
-        );
-
-        // then
-        expect(actualResult, true);
-      });
-
-      test('로그인이 성공했을 때 false 를 반환한다.', () async {
-        // given
-        final expectUserAuth = userAuth.copyWith();
-
-        userAuthDataSource.returnValue = false;
-
-        // when
-        final actualResult = await userAuthRepository.signIn(
-          userAuth: expectUserAuth,
-        );
-
-        // then
-        expect(actualResult, false);
-      });
-    });
-
-    group('logOut() 메소드는', () {
-      test('UserAuthDataSource.logOut() 메소드를 1회 호출한다.', () async {
-        // given
-        int expectCallCount = 1;
-
-        // when
-        await userAuthRepository.logOut();
-
-        // then
-        expect(userAuthDataSource.logOutCallCount, expectCallCount);
-      });
-
-      test('로그아웃이 성공했을 때 true 를 반환한다.', () async {
-        // given
-        userAuthDataSource.returnValue = true;
-
-        // when
-        final actualResult = await userAuthRepository.logOut();
-
-        // then
-        expect(actualResult, true);
-      });
-
-      test('로그아웃이 성공했을 때 false 를 반환한다.', () async {
-        // given
-        userAuthDataSource.returnValue = false;
-
-        // when
-        final actualResult = await userAuthRepository.logOut();
-
-        // then
-        expect(actualResult, false);
-      });
-    });
-
-    group('signOut() 메소드는', () {
-      test('UserAuthDataSource.signOut() 메소드를 1회 호출한다.', () async {
-        // given
-        int expectCallCount = 1;
-
-        // when
-        await userAuthRepository.signOut();
-
-        // then
-        expect(userAuthDataSource.signOutCallCount, expectCallCount);
-      });
-
-      test('회원탈퇴가 성공했을 때 true 를 반환한다.', () async {
-        // given
-        userAuthDataSource.returnValue = true;
-
-        // when
-        final actualResult = await userAuthRepository.signOut();
-
-        // then
-        expect(actualResult, true);
-      });
-
-      test('회원탈퇴가 성공했을 때 false 를 반환한다.', () async {
-        // given
-        userAuthDataSource.returnValue = false;
-
-        // when
-        final actualResult = await userAuthRepository.signOut();
-
-        // then
-        expect(actualResult, false);
+          // then
+          expect(userAuthDataSource.signOutCallCount, expectCallCount);
+        });
       });
     });
   });

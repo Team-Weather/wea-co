@@ -6,7 +6,8 @@ abstract interface class RemoteFeedDataSource {
   /// OOTD 피드 작성 성공 시 : 피드 업로드 요청(Feed) -> / 업로드 완료(bool) ← 파베
   /// OOTD 편집 완료 후 [상세 페이지]:  위와 동일.
   /// OOTD 편집 완료 후 [마이 페이지]: 위와 동일.*피드 업데이트
-  Future<bool> saveFeed({
+
+  Future<void> saveFeed({
     required Transaction transaction,
     required Feed feed,
   });
@@ -22,7 +23,7 @@ abstract interface class RemoteFeedDataSource {
   });
 
   /// [마이페이지] 피드 삭제: 피드 삭제 요청(id) -> 파베/ 삭제 완료 (bool) from FB
-  Future<bool> deleteFeed({
+  Future<void> deleteFeed({
     required Transaction transaction,
     required String id,
   });

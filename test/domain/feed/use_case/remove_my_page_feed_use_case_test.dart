@@ -7,11 +7,12 @@ void main() {
     final mockOotdFeedRepository = MockOotdFeedRepositoryImpl();
     final RemoveMyPageFeedUseCase useCase =
         RemoveMyPageFeedUseCase(ootdFeedRepository: mockOotdFeedRepository);
-
+    setUp(() => mockOotdFeedRepository.initMockData());
     group('execute 메소드는', () {
       test('파라미터로 전달받은 id를 OotdFeedRepository에 그대로 전달한다.', () async {
         // Given
         const expected = 'id';
+        // mockOotdFeedRepository.
 
         // When
         await useCase.execute(id: expected);
@@ -20,16 +21,15 @@ void main() {
         expect(mockOotdFeedRepository.removeOotdFeedParamId, expected);
       });
 
-      test('OotdFeedRepository.removeOotdFeed를 호출하고 반환받은 값을 그대로 반환한다.', () async {
+      test('OotdFeedRepository.removeOotdFeed를 한번 호출한다.', () async {
         // Given
-        const expected = true;
-        mockOotdFeedRepository.removeOotdFeedReturnValue = expected;
+        const expected = 1;
 
         // When
-        final result = await useCase.execute(id: 'id');
+        await useCase.execute(id: 'id');
 
         // Then
-        expect(result, expected);
+        expect(mockOotdFeedRepository.removeOotdFeedCallCount, expected);
       });
     });
   });

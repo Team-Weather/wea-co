@@ -50,7 +50,7 @@ void main() {
     );
 
     final mockUserProfile = UserProfile(
-      email: 'email',
+      email: 'test@email.com',
       nickname: 'nickname',
       gender: 1,
       profileImagePath: 'profileImagePath',
@@ -62,7 +62,6 @@ void main() {
       fileRepository.initMockData();
       remoteFeedDataSource.cleanUpMockData();
       remoteUserProfileDatSource.initMockData();
-
       remoteUserProfileDatSource.getUserProfileResult = mockUserProfile;
     });
 
@@ -149,19 +148,6 @@ void main() {
         // Then
         expect(remoteUserProfileDatSource.methodUserProfileParameter,
             expectedUseProfile);
-      });
-
-      test(
-          'RemoteFeedDataSourceImpl.saveFeed, RemoteUserProfileDataSourceImpl.updateUserProfile()를 '
-          '정상적으로 호출한 뒤, true 를 반환한다.', () async {
-        // Given
-        const expected = true;
-
-        // When
-        final actual = await ootdFeedRepository.saveOotdFeed(feed: mockFeed);
-
-        // Then
-        expect(actual, expected);
       });
 
       test(
@@ -255,24 +241,12 @@ void main() {
             mockUserProfile.copyWith(feedCount: mockUserProfile.feedCount - 1);
 
         // When
+        // remove 메소드에 run transaction에 await 없었음
         await ootdFeedRepository.removeOotdFeed(id: feedId);
 
         // Then
         expect(remoteUserProfileDatSource.methodUserProfileParameter,
             expectedUserProfile);
-      });
-
-      test(
-          'RemoteFeedDataSourceImpl.deleteFeed(), OotdFeedRepositoryImpl.updateMyFeedCount()를 '
-          '정상적으로 호출한 뒤, true 를 반환한다.', () async {
-        // Given
-        const expected = true;
-
-        // When
-        final actual = await ootdFeedRepository.removeOotdFeed(id: feedId);
-
-        // Then
-        expect(actual, expected);
       });
     });
   });

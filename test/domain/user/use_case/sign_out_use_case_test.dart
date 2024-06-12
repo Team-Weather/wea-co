@@ -9,31 +9,19 @@ void main() {
     final SignOutUseCase useCase =
         SignOutUseCase(userAuthRepository: userAuthRepository);
 
-    group('signOut 메서드는', () {
+    group('execute() 메서드는', () {
       setUp(() => userAuthRepository.initMockData());
 
-      test('회원 탈퇴에 실패한다.', () async {
+      test('userAuthRepository.signOut() 메서드를 1회 호출한다.', () async {
         // Given
-        const bool expectedResult = false;
-        userAuthRepository.isSignOut = expectedResult;
+        const int expectedResult = 1;
 
         // When
-        final result = await useCase.execute();
+        await useCase.execute();
+        final actual = userAuthRepository.signOutCallCount;
 
         // Then
-        expect(result, expectedResult);
-      });
-
-      test('회원 탈퇴에 성공한다.', () async {
-        // Given
-        const bool expectedResult = true;
-        userAuthRepository.isSignOut = expectedResult;
-
-        // When
-        final result = await useCase.execute();
-
-        // Then
-        expect(result, expectedResult);
+        expect(actual, expectedResult);
       });
     });
   });

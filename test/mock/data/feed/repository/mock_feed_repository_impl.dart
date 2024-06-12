@@ -57,10 +57,10 @@ class MockFeedRepositoryImpl implements FeedRepository {
   /// [getFeedParamId]에 [id] 저장
   /// [getFeedResult] 반환
   @override
-  Future<Feed?> getFeed({required String id}) async {
+  Future<Feed> getFeed({required String id}) async {
     getFeedCallCount++;
     methodParameterMap['id'] = id;
-    return getFeedResult;
+    return getFeedResult!;
   }
 
   /// [_fakeFeedList]에서 조건에 맞는 피드 데이터를 찾아서 리스트로 반환

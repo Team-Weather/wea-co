@@ -1,5 +1,8 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:weaco/core/enum/exception_code.dart';
 import 'package:weaco/core/firebase/firebase_auth_service.dart';
 import 'package:weaco/data/user/data_source/user_auth_data_source.dart';
 
@@ -12,70 +15,62 @@ class FirebaseUserAuthDataSourceImpl implements UserAuthDataSource {
 
   // 회원가입
   @override
-  Future<bool> signUp({required String email, required String password}) async {
-    bool isSignUpSuccess = false;
-
+  Future<void> signUp({required String email, required String password}) async {
     try {
-      final userCredential =
-          await _firebaseService.signUp(email: email, password: password);
-
-      isSignUpSuccess = userCredential?.user != null;
-    } on Exception catch (e) {
-      isSignUpSuccess = false;
+      await _firebaseService.signUp(email: email, password: password);
+    } catch (e) {
       log(e.toString(), name: 'FirebaseUserAuthDataSource.signUp()');
-      rethrow;
+      throw _exceptionHandling(e);
     }
-
-    return isSignUpSuccess;
   }
 
   // 로그인
   @override
-  Future<bool> signIn({required String email, required String password}) async {
+  Future<void> signIn({required String email, required String password}) async {
     try {
       await _firebaseService.signIn(email: email, password: password);
-    } on Exception catch (e) {
+    } catch (e) {
       log(e.toString(), name: 'FirebaseUserAuthDataSource.signIn()');
-      rethrow;
+      throw _exceptionHandling(e);
     }
-
-    return true;
   }
 
   // 로그아웃
   @override
-  Future<bool> logOut() async {
-    bool isLogOutSuccess = true;
-
+  Future<void> logOut() async {
     try {
       await _firebaseService.logOut();
-    } on Exception catch (e) {
-      isLogOutSuccess = false;
+    } catch (e) {
       log(e.toString(), name: 'FirebaseUserAuthDataSource.logOut()');
-      rethrow;
+      throw _exceptionHandling(e);
     }
-
-    return isLogOutSuccess;
   }
 
   // 회원탈퇴
   @override
-  Future<bool> signOut() async {
-    bool isSignOutSuccess = true;
-    
+  Future<void> signOut() async {
     try {
       await _firebaseService.signOut();
-    } on Exception catch (e) {
-      isSignOutSuccess = false;
+    } catch (e) {
       log(e.toString(), name: 'FirebaseUserAuthDataSource.signOut()');
-      rethrow;
+      throw _exceptionHandling(e);
     }
-
-    return isSignOutSuccess;
   }
 
   @override
   String? signInCheck() {
-    return _firebaseService.user?.email;
+    try {
+      return _firebaseService.user?.email;
+    } catch (e) {
+      throw _exceptionHandling(e);
+    }
+  }
+
+  ExceptionCode _exceptionHandling(Object e) {
+    return switch (e) {
+      FirebaseException fb => ExceptionCode.fromStatus(fb.code),
+      DioException _ => ExceptionCode.internalServerException,
+      _ => ExceptionCode.unknownException,
+    };
   }
 }

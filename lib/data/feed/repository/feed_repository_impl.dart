@@ -15,7 +15,7 @@ class FeedRepositoryImpl implements FeedRepository {
   /// @param id: 피드 id
   /// @return Feed: 피드
   @override
-  Future<Feed?> getFeed({required String id}) async {
+  Future<Feed> getFeed({required String id}) async {
     return await remoteFeedDataSource.getFeed(id: id);
   }
 

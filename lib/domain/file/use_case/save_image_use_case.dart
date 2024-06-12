@@ -16,8 +16,8 @@ class SaveImageUseCase {
   /// @param isOrigin: 원본 이미지 = true, 크롭된 이미지 = false
   /// @param file: 저장할 이미지 데이터
   /// @return: 데이터 저장 성공 여부 반환
-  Future<bool> execute({required bool isOrigin, required File file}) async {
+  Future<void> execute({required bool isOrigin, required File file}) async {
     final List<int> compressedImage = await _imageCompressor.compressImage(file: file);
-    return await _fileRepository.saveImage(isOrigin: isOrigin, file: file, compressedImage: compressedImage);
+    await _fileRepository.saveImage(isOrigin: isOrigin, file: file, compressedImage: compressedImage);
   }
 }

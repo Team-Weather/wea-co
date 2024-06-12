@@ -1,5 +1,7 @@
-import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
+import 'package:weaco/core/enum/exception_code.dart';
 import 'package:weaco/core/enum/image_type.dart';
 import 'package:weaco/core/path_provider/path_provider_service.dart';
 import 'local_file_data_source.dart';
@@ -14,25 +16,24 @@ class LocalFileDataSourceImpl implements LocalFileDataSource {
       : _pathProvider = pathProvider;
 
   @override
-  Future<File?> getImage({required ImageType imageType}) async {
+  Future<File> getImage({required ImageType imageType}) async {
     try {
       final directory = await _pathProvider.getCacheDirectory();
-      String fileName = switch(imageType) {
-        ImageType.origin => _originImageFileName ,
+      String fileName = switch (imageType) {
+        ImageType.origin => _originImageFileName,
         ImageType.cropped => _croppedImageFileName,
         ImageType.compressed => _compressedImageFileName,
       };
-      return (await File('$directory/$fileName').exists())
-          ? File('$directory/$fileName')
-          : null;
+      if (!await File('$directory/$fileName').exists()) throw ExceptionCode.notFoundException;
+
+      return File('$directory/$fileName');
     } catch (e) {
-      log(e.toString(), name: 'LocalFileDataSourceImpl.getImagePath()');
-      return null;
+      throw _exceptionHandling(e);
     }
   }
 
   @override
-  Future<bool> saveImage({required bool isOrigin, required File file}) async {
+  Future<void> saveImage({required bool isOrigin, required File file}) async {
     try {
       final directory = await _pathProvider.getCacheDirectory();
       String fileName = isOrigin ? _originImageFileName : _croppedImageFileName;
@@ -40,23 +41,20 @@ class LocalFileDataSourceImpl implements LocalFileDataSource {
         await File('$directory/$fileName').delete();
       }
       await File('$directory/$fileName').writeAsBytes(await file.readAsBytes());
-      return true;
     } catch (e) {
-      log(e.toString(), name: 'LocalFileDataSourceImpl.saveImage()');
-      return false;
+      _exceptionHandling(e);
     }
   }
 
   @override
-  Future<File?> getCompressedImage() async {
+  Future<File> getCompressedImage() async {
     try {
       final directory = await _pathProvider.getCacheDirectory();
-      return (await File('$directory/$_compressedImageFileName').exists())
-          ? File('$directory/$_compressedImageFileName')
-          : null;
+      await File('$directory/$_compressedImageFileName').exists();
+
+      return File('$directory/$_compressedImageFileName');
     } catch (e) {
-      log(e.toString(), name: 'LocalFileDataSourceImpl.getCompressedImage()');
-      return null;
+      throw _exceptionHandling(e);
     }
   }
 
@@ -69,7 +67,16 @@ class LocalFileDataSourceImpl implements LocalFileDataSource {
       }
       await File('$directory/$_compressedImageFileName').writeAsBytes(image);
     } catch (e) {
-      log(e.toString(), name: 'LocalFileDataSourceImpl.saveCompressedImage()');
+      _exceptionHandling(e);
     }
+  }
+
+  ExceptionCode _exceptionHandling(Object e) {
+    return switch (e) {
+      FirebaseException _ => ExceptionCode.internalServerException,
+      DioException _ => ExceptionCode.internalServerException,
+      ExceptionCode _ => e,
+      _ => ExceptionCode.unknownException,
+    };
   }
 }

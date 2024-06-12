@@ -1,7 +1,7 @@
 import 'package:weaco/domain/feed/model/feed.dart';
 
 abstract interface class OotdFeedRepository {
-  Future<bool> saveOotdFeed({required Feed feed});
+  Future<void> saveOotdFeed({required Feed feed});
 
-  Future<bool> removeOotdFeed({required String id});
+  Future<void> removeOotdFeed({required String id});
 }

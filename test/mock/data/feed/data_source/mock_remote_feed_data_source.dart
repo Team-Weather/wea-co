@@ -26,13 +26,12 @@ class MockRemoteFeedDataSource implements RemoteFeedDataSource {
   }
 
   @override
-  Future<bool> deleteFeed({
+  Future<void> deleteFeed({
     required Transaction transaction,
     required String id,
   }) async {
     deleteFeedParamId = id;
     deleteFeedMethodCallCount++;
-    return deleteFeedReturnValue;
   }
 
   @override
@@ -76,7 +75,7 @@ class MockRemoteFeedDataSource implements RemoteFeedDataSource {
   }
 
   @override
-  Future<bool> saveFeed({
+  Future<void> saveFeed({
     required Transaction transaction,
     required Feed feed,
   }) async {
@@ -87,6 +86,5 @@ class MockRemoteFeedDataSource implements RemoteFeedDataSource {
     if (saveFeedReturnValue) {
       feedList.add(feed);
     }
-    return saveFeedReturnValue;
   }
 }

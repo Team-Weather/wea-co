@@ -26,42 +26,35 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   ///
   /// 두 작업이 완료시 return true
   @override
-  Future<bool> signUp({
+  Future<void> signUp({
     required UserAuth userAuth,
     required UserProfile userProfile,
   }) async {
-    final signUpResult = await _userAuthDataSource.signUp(
+    await _userAuthDataSource.signUp(
         email: userAuth.email, password: userAuth.password);
-
-    if (signUpResult == false) {
-      return false;
-    }
-
-    final saveUserProfileResult = await _remoteUserProfileDataSource
-        .saveUserProfile(userProfile: userProfile);
-
-    if (saveUserProfileResult == false) {
+    try {
+      await _remoteUserProfileDataSource.saveUserProfile(
+          userProfile: userProfile);
+    } catch (e) {
       await _userAuthDataSource.signOut();
-      return false;
+      rethrow;
     }
-
-    return true;
   }
 
   @override
-  Future<bool> signIn({required UserAuth userAuth}) async {
-    return await _userAuthDataSource.signIn(
+  Future<void> signIn({required UserAuth userAuth}) async {
+    await _userAuthDataSource.signIn(
         email: userAuth.email, password: userAuth.password);
   }
 
   @override
-  Future<bool> logOut() async {
-    return await _userAuthDataSource.logOut();
+  Future<void> logOut() async {
+    await _userAuthDataSource.logOut();
   }
 
   @override
-  Future<bool> signOut() async {
-    return await _userAuthDataSource.signOut();
+  Future<void> signOut() async {
+    await _userAuthDataSource.signOut();
   }
 
   @override
